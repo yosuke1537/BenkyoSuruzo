@@ -1,0 +1,19 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+.kotlin
+
+# Secrets: never commit signing material or local config
+*.jks
+*.keystore
+keystore.properties
+local.properties
+.idea/
+build/
+.gradle/

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">勉強するぞ</string>
+    <string name="app_tagline">他のアプリの画面にある中国語を読み取って、発音を確認できるアプリです。</string>
+
+    <string name="accessibility_service_label">勉強するぞ</string>
+    <string name="accessibility_service_summary">他アプリの画面テキストを読み取ります</string>
+    <string name="accessibility_service_description">他アプリの画面に表示されている文字列を読み取り、中国語の部分を音声で読み上げるために使用します。</string>
+
+    <string name="privacy_notice_title">ご利用前にお読みください</string>
+    <string name="privacy_notice_body">このアプリは「ユーザー補助（アクセシビリティ）」の権限を使用します。\n\nこの権限を許可すると、アプリは端末の画面上に表示されているすべての情報（入力中の内容やパスワードを含む可能性があります）にアクセスできる状態になります。\n\n本アプリは読み取ったテキストを端末内での読み上げにのみ使用し、外部への送信・保存は一切行いません。通信権限も要求しません。\n\nこの権限は端末の設定画面からいつでもOFFにできます。</string>
+
+    <string name="status_enabled">状態：有効</string>
+    <string name="status_disabled">状態：無効</string>
+    <string name="button_open_app_settings">設定</string>
+    <string name="button_open_settings">アクセシビリティ設定を開く</string>
+    <string name="settings_guide">設定 &gt; アクセシビリティ &gt; インストール済みのアプリ &gt; 勉強するぞ をONにしてください。</string>
+</resources>

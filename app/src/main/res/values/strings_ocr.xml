@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ocr_permission_title">画面キャプチャの許可</string>
+    <string name="ocr_permission_body">画像化されたテキストを読み取るため、画面のキャプチャを許可してください。取得した画像は保存されず、読み取り後すぐに破棄されます。</string>
+    <string name="ocr_permission_button">許可して続行</string>
+    <string name="ocr_capture_notification_channel">画面読み取り</string>
+    <string name="ocr_capture_notification_title">画面を読み取っています</string>
+    <string name="ocr_capture_notification_text">画像化されたテキストを読み取るため画面をキャプチャしています</string>
+</resources>

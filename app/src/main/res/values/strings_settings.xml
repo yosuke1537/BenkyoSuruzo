@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">設定</string>
+
+    <string name="pref_category_ocr">OCR（画像読み取り）</string>
+    <string name="pref_ocr_enabled_title">OCR を有効にする</string>
+    <string name="pref_ocr_enabled_summary">画像化されたテキストを読み取ります</string>
+    <string name="pref_capture_mode_title">キャプチャモード</string>
+    <string name="pref_allowed_apps_title">OCR 対象アプリ</string>
+    <string name="pref_allowed_apps_summary">選択したアプリでのみ OCR を実行します</string>
+    <string name="pref_allowed_apps_summary_count">選択中：%1$d アプリ</string>
+    <string name="pref_threshold_title">採用スコアの閾値</string>
+    <string name="pref_threshold_summary">現在：%1$d</string>
+    <string name="pref_language_title">対象言語</string>
+    <string name="pref_language_bundled_summary">モデル同梱・オフライン利用可</string>
+    <string name="pref_language_unbundled_summary">初回利用時にダウンロードが必要です（要ネット接続）</string>
+
+    <string name="pref_category_speech">読み上げ</string>
+    <string name="pref_speech_enabled_title">読み上げを有効にする</string>
+    <string name="pref_speech_rate_title">読み上げ速度</string>
+    <string name="pref_speech_rate_summary">現在：%1$.1f 倍</string>
+
+    <string name="pref_category_mask">マスク機能</string>
+    <string name="pref_mask_enabled_title">マスク機能を有効にする</string>
+    <string name="pref_mask_enabled_summary">語学アプリの文字列を緑色の帯で隠せます（通知から開始）</string>
+    <string name="mask_notification_permission_denied">通知が許可されていないため、開始導線が使えません。設定から通知を許可してください。</string>
+
+    <string-array name="capture_mode_entries">
+        <item>都度許可</item>
+        <item>永続化</item>
+    </string-array>
+    <string-array name="capture_mode_values">
+        <item>once</item>
+        <item>persistent</item>
+    </string-array>
+
+    <string-array name="language_entries">
+        <item>中国語</item>
+        <item>日本語</item>
+        <item>韓国語</item>
+        <item>英語</item>
+    </string-array>
+    <string-array name="language_values">
+        <item>zh-Hans</item>
+        <item>ja</item>
+        <item>ko</item>
+        <item>en</item>
+    </string-array>
+</resources>

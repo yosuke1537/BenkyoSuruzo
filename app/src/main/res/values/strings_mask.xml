@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mask_channel_name">マスクモード</string>
+    <string name="mask_notification_title">マスクモード</string>
+    <string name="mask_notification_ready">準備完了</string>
+    <string name="mask_notification_running">実行中</string>
+    <string name="mask_action_start">開始</string>
+    <string name="mask_action_stop">停止</string>
+    <string name="mask_no_targets">この画面には読み取れる文字列がありません</string>
+    <string name="mask_need_accessibility">アクセシビリティサービスが無効です</string>
+    <string name="mask_overlay_stop_button">終了</string>
+</resources>

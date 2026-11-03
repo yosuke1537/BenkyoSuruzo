@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="poc_title">Overlay PoC</string>
+    <string name="poc_window_type">WindowType</string>
+    <string name="poc_type_application">TYPE_APPLICATION_OVERLAY</string>
+    <string name="poc_type_accessibility">TYPE_ACCESSIBILITY_OVERLAY</string>
+    <string name="poc_alpha">Alpha</string>
+    <string name="poc_flags">Flags</string>
+    <string name="poc_flag_not_focusable">FLAG_NOT_FOCUSABLE</string>
+    <string name="poc_flag_layout_in_screen">FLAG_LAYOUT_IN_SCREEN</string>
+    <string name="poc_flag_not_touch_modal">FLAG_NOT_TOUCH_MODAL</string>
+    <string name="poc_button_show">オーバーレイを表示</string>
+    <string name="poc_button_remove">オーバーレイを削除</string>
+    <string name="poc_log_label">ログ</string>
+</resources>

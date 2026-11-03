@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/pref_category_ocr">
+        <SwitchPreferenceCompat
+            app:key="ocr_enabled"
+            app:title="@string/pref_ocr_enabled_title"
+            app:summary="@string/pref_ocr_enabled_summary"
+            app:defaultValue="false" />
+
+        <ListPreference
+            app:key="capture_mode"
+            app:title="@string/pref_capture_mode_title"
+            app:entries="@array/capture_mode_entries"
+            app:entryValues="@array/capture_mode_values"
+            app:defaultValue="once" />
+
+        <jp.benkyosuruzo.settings.AppAllowListPreference
+            app:key="allowed_packages"
+            app:title="@string/pref_allowed_apps_title"
+            app:summary="@string/pref_allowed_apps_summary" />
+
+        <jp.benkyosuruzo.settings.ThresholdPreference
+            app:key="adoption_threshold"
+            app:title="@string/pref_threshold_title"
+            app:summary="@string/pref_threshold_summary" />
+
+        <jp.benkyosuruzo.settings.LanguagePreference
+            app:key="selected_language"
+            app:title="@string/pref_language_title"
+            app:defaultValue="zh-Hans" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/pref_category_speech">
+        <SwitchPreferenceCompat
+            app:key="speech_enabled"
+            app:title="@string/pref_speech_enabled_title"
+            app:defaultValue="true" />
+
+        <jp.benkyosuruzo.settings.SpeechRatePreference
+            app:key="speech_rate"
+            app:title="@string/pref_speech_rate_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/pref_category_mask">
+        <SwitchPreferenceCompat
+            app:key="mask_feature_enabled"
+            app:title="@string/pref_mask_enabled_title"
+            app:summary="@string/pref_mask_enabled_summary"
+            app:defaultValue="false" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
