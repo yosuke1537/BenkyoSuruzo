@@ -37,13 +37,17 @@ class MaskOverlayView(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+
+        // Convert screen coordinates to view coordinates (POC-01 found a ~81px offset).
+        getLocationOnScreen(offset)
+
         controller.current().forEach { mask ->
             val b = mask.bounds
             canvas.drawRect(
-                b.left.toFloat(),
-                b.top.toFloat(),
-                b.right.toFloat(),
-                b.bottom.toFloat(),
+                (b.left - offset[0]).toFloat(),
+                (b.top - offset[1]).toFloat(),
+                (b.right - offset[0]).toFloat(),
+                (b.bottom - offset[1]).toFloat(),
                 maskPaint
             )
         }
