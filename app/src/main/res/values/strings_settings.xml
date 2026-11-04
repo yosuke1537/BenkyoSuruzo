@@ -23,6 +23,8 @@
     <string name="pref_category_mask">マスク機能</string>
     <string name="pref_mask_enabled_title">マスク機能を有効にする</string>
     <string name="pref_mask_enabled_summary">語学アプリの文字列を緑色の帯で隠せます（通知から開始）</string>
+    <string name="pref_mask_floating_button_title">フローティングボタンを表示する</string>
+    <string name="pref_mask_floating_button_summary">画面上のボタンをワンタップするだけでマスクモードを開始できます。ボタンはドラッグで移動できます。</string>
     <string name="mask_notification_permission_denied">通知が許可されていないため、開始導線が使えません。設定から通知を許可してください。</string>
 
     <string-array name="capture_mode_entries">

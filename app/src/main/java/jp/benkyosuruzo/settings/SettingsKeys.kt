@@ -20,5 +20,10 @@ object SettingsKeys {
     // Mask overlay (TASK-09)
     const val MASK_FEATURE_ENABLED = "mask_feature_enabled"   // Boolean, default false
 
+    // Floating mask button (TASK-11)
+    const val MASK_FLOATING_BUTTON_ENABLED = "mask_floating_button_enabled" // Boolean, default false
+    const val MASK_FLOATING_BUTTON_X = "mask_floating_button_x"             // Int
+    const val MASK_FLOATING_BUTTON_Y = "mask_floating_button_y"             // Int
+
     const val PREFS_NAME = "benkyo_settings"
 }

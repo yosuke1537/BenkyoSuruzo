@@ -55,6 +55,7 @@ class MaskOverlayService : Service() {
 
     private fun startOverlayWhenReady() {
         if (destroyed) return
+        FloatingButtonController.hide()
         val service = ScreenTextReaderService.current()
         if (service == null) {
             Toast.makeText(this, getString(R.string.mask_need_accessibility), Toast.LENGTH_LONG).show()
@@ -123,6 +124,7 @@ class MaskOverlayService : Service() {
         MaskModeController.get().stop()
         Log.d(TAG, "stop mode")
         MaskNotificationHelper.sync(this, running = false)
+        ScreenTextReaderService.current()?.let { FloatingButtonController.show(it) }
         super.onDestroy()
     }
 

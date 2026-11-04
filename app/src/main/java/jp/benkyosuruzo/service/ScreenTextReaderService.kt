@@ -1,15 +1,18 @@
 package jp.benkyosuruzo.service
 
 import android.accessibilityservice.AccessibilityService
+import android.content.Context
 import android.graphics.Rect
 import android.os.SystemClock
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import jp.benkyosuruzo.mask.Bounds
+import jp.benkyosuruzo.mask.FloatingButtonController
 import jp.benkyosuruzo.mask.MaskModeController
 import jp.benkyosuruzo.mask.MaskOverlayService
 import jp.benkyosuruzo.mask.TextNode
+import jp.benkyosuruzo.settings.SettingsKeys
 import jp.benkyosuruzo.ocr.OcrRuntime
 import jp.benkyosuruzo.text.FilteringHandler
 import jp.benkyosuruzo.text.ScreenText
@@ -30,6 +33,7 @@ class ScreenTextReaderService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         instance = this
+        FloatingButtonController.show(this)
         handler = ScreenTextHandler.create(this)
     }
 
@@ -47,12 +51,21 @@ class ScreenTextReaderService : AccessibilityService() {
     }
 
     override fun onDestroy() {
+        FloatingButtonController.hide()
         instance = null
         handler = null
         OcrRuntime.release()
         // TYPE_ACCESSIBILITY_OVERLAY is auto-removed on disconnect; sync state.
         MaskOverlayService.stop(this)
         super.onDestroy()
+    }
+
+    /** Shows or hides the floating mask button based on its setting. */
+    fun syncFloatingButton() {
+        val enabled = getSharedPreferences(SettingsKeys.PREFS_NAME, Context.MODE_PRIVATE)
+            .getBoolean(SettingsKeys.MASK_FLOATING_BUTTON_ENABLED, false)
+        if (enabled) FloatingButtonController.show(this)
+        else FloatingButtonController.hide()
     }
 
     private fun handleEvent(event: AccessibilityEvent?) {

@@ -48,6 +48,12 @@
             app:title="@string/pref_mask_enabled_title"
             app:summary="@string/pref_mask_enabled_summary"
             app:defaultValue="false" />
+
+        <SwitchPreferenceCompat
+            app:key="mask_floating_button_enabled"
+            app:title="@string/pref_mask_floating_button_title"
+            app:summary="@string/pref_mask_floating_button_summary"
+            app:defaultValue="false" />
     </PreferenceCategory>
 
 </PreferenceScreen>
