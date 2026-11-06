@@ -49,6 +49,22 @@
             app:summary="@string/pref_mask_enabled_summary"
             app:defaultValue="false" />
 
+        <ListPreference
+            app:key="mask_apply_unit"
+            app:title="@string/pref_mask_apply_unit_title"
+            app:summary="@string/pref_mask_apply_unit_summary"
+            app:entries="@array/mask_unit_entries"
+            app:entryValues="@array/mask_unit_values"
+            app:defaultValue="word" />
+
+        <ListPreference
+            app:key="mask_clear_unit"
+            app:title="@string/pref_mask_clear_unit_title"
+            app:summary="@string/pref_mask_clear_unit_summary"
+            app:entries="@array/mask_unit_entries"
+            app:entryValues="@array/mask_unit_values"
+            app:defaultValue="word" />
+
         <SwitchPreferenceCompat
             app:key="mask_floating_button_enabled"
             app:title="@string/pref_mask_floating_button_title"

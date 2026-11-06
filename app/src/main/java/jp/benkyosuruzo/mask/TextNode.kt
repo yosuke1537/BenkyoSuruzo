@@ -27,5 +27,6 @@ data class TextNode(
     val id: String,
     val text: String,
     val bounds: Bounds,
-    val packageName: String
+    val packageName: String,
+    val groupId: String
 )

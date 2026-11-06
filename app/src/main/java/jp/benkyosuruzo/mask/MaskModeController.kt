@@ -37,34 +37,83 @@ class MaskModeController private constructor() {
     }
 
     /**
-     * Toggles the mask at the given screen coordinates. Returns true when the
-     * mask set changed, false otherwise.
+     * Toggles the mask at the given screen coordinates using word-level units
+     * (backward compatible with TASK-09). Returns true when the mask set
+     * changed, false otherwise.
      */
     @Synchronized
-    fun toggleAt(x: Int, y: Int): Boolean {
+    fun toggleAt(x: Int, y: Int): Boolean = toggleAt(x, y, Unit.WORD, Unit.WORD)
+
+    /**
+     * Toggles the mask at the given screen coordinates.
+     *
+     * @param applyUnit unit to use when adding a mask (WORD / SENTENCE)
+     * @param clearUnit unit to use when removing a mask (WORD / SENTENCE)
+     * @return true when the mask set changed, false otherwise
+     */
+    @Synchronized
+    fun toggleAt(x: Int, y: Int, applyUnit: Unit, clearUnit: Unit): Boolean {
         val existing = masks.filter { it.bounds.contains(x, y) }
             .minByOrNull { it.bounds.width().toLong() * it.bounds.height() }
         if (existing != null) {
-            masks.remove(existing)
-            Log.d(TAG, "mask removed id=${existing.nodeId}")
-            return true
+            return when (clearUnit) {
+                Unit.WORD -> {
+                    val removed = masks.remove(existing)
+                    Log.d(TAG, "clear word id=${existing.nodeId}")
+                    removed
+                }
+                Unit.SENTENCE -> {
+                    val removed = masks.removeAll { it.groupId == existing.groupId }
+                    Log.d(TAG, "clear sentence group=${existing.groupId} removed=$removed")
+                    removed
+                }
+            }
         }
         val node = resolver.findTargetAt(x, y) ?: return false
-        if (masks.any { it.nodeId == node.id }) return false
-        masks.add(
-            MaskRect(
-                nodeId = node.id,
-                text = node.text,
-                bounds = Bounds(node.bounds.left, node.bounds.top, node.bounds.right, node.bounds.bottom)
-            )
-        )
-        Log.d(TAG, "mask added id=${node.id}")
-        return true
+        return when (applyUnit) {
+            Unit.WORD -> {
+                if (masks.any { it.nodeId == node.id }) return false
+                masks.add(
+                    MaskRect(
+                        nodeId = node.id,
+                        text = node.text,
+                        bounds = Bounds(node.bounds.left, node.bounds.top, node.bounds.right, node.bounds.bottom),
+                        groupId = node.groupId
+                    )
+                )
+                Log.d(TAG, "mask added id=${node.id}")
+                true
+            }
+            Unit.SENTENCE -> {
+                val groupNodes = resolver.all().filter { it.groupId == node.groupId }
+                if (groupNodes.isEmpty()) return false
+                if (groupNodes.all { g -> masks.any { it.nodeId == g.id } }) return false
+                var added = 0
+                groupNodes.forEach { g ->
+                    if (masks.none { it.nodeId == g.id }) {
+                        masks.add(
+                            MaskRect(
+                                nodeId = g.id,
+                                text = g.text,
+                                bounds = Bounds(g.bounds.left, g.bounds.top, g.bounds.right, g.bounds.bottom),
+                                groupId = node.groupId
+                            )
+                        )
+                        added++
+                    }
+                }
+                Log.d(TAG, "apply sentence group=${node.groupId} nodes=$added")
+                true
+            }
+        }
     }
 
     /** Returns a defensive copy of the current masks. */
     @Synchronized
     fun current(): List<MaskRect> = masks.toList()
+
+    /** Masking/clearing granularity. */
+    enum class Unit { WORD, SENTENCE }
 
     companion object {
         private const val TAG = "MaskModeController"
@@ -83,5 +132,6 @@ class MaskModeController private constructor() {
 data class MaskRect(
     val nodeId: String,
     val text: String,
-    val bounds: Bounds
+    val bounds: Bounds,
+    val groupId: String
 )

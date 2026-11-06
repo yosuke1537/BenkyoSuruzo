@@ -8,6 +8,7 @@ import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 import jp.benkyosuruzo.R
+import jp.benkyosuruzo.settings.SettingsKeys
 
 /**
  * Full-screen overlay for mask mode. Draws a green band over every masked node
@@ -68,7 +69,18 @@ class MaskOverlayView(
                 onStop()
                 return true
             }
-            val changed = controller.toggleAt(screenX, screenY)
+            val prefs = context.getSharedPreferences(SettingsKeys.PREFS_NAME, Context.MODE_PRIVATE)
+            val applyUnit = if (prefs.getString(SettingsKeys.MASK_APPLY_UNIT, "word") == "sentence") {
+                MaskModeController.Unit.SENTENCE
+            } else {
+                MaskModeController.Unit.WORD
+            }
+            val clearUnit = if (prefs.getString(SettingsKeys.MASK_CLEAR_UNIT, "word") == "sentence") {
+                MaskModeController.Unit.SENTENCE
+            } else {
+                MaskModeController.Unit.WORD
+            }
+            val changed = controller.toggleAt(screenX, screenY, applyUnit, clearUnit)
             if (changed) invalidate()
         }
         return true // consume every touch (scroll lock)

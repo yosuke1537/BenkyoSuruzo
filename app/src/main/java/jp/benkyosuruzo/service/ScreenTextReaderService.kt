@@ -11,6 +11,7 @@ import jp.benkyosuruzo.mask.Bounds
 import jp.benkyosuruzo.mask.FloatingButtonController
 import jp.benkyosuruzo.mask.MaskModeController
 import jp.benkyosuruzo.mask.MaskOverlayService
+import jp.benkyosuruzo.mask.SentenceGrouper
 import jp.benkyosuruzo.mask.TextNode
 import jp.benkyosuruzo.settings.SettingsKeys
 import jp.benkyosuruzo.ocr.OcrRuntime
@@ -124,7 +125,8 @@ class ScreenTextReaderService : AccessibilityService() {
 
     /**
      * Collects all maskable text nodes currently on screen for mask mode.
-     * Bounded BFS; nodes are not recycled here.
+     * Bounded BFS; nodes are not recycled here. Each node is assigned a
+     * sentence-group id (see [SentenceGrouper]).
      */
     fun snapshotTextNodes(): List<TextNode> {
         // Use the active window (the foreground app) rather than all
@@ -132,26 +134,36 @@ class ScreenTextReaderService : AccessibilityService() {
         // does not leak into the mask targets.
         val root = rootInActiveWindow ?: return emptyList()
 
-        val nodes = mutableListOf<TextNode>()
+        val raw = mutableListOf<SentenceGrouper.RawNode>()
         val queue = ArrayDeque<NodeDepth>()
-        queue.add(NodeDepth(root, 0))
+        queue.add(NodeDepth(root, 0, parentKey = null, sentenceKey = null))
         val bounds = Rect()
         var index = 0
+        var sentenceCounter = 0
 
-        while (queue.isNotEmpty() && nodes.size < MAX_SNAPSHOT_NODES) {
+        while (queue.isNotEmpty() && raw.size < MAX_SNAPSHOT_NODES) {
             val current = queue.removeFirst()
             if (current.depth > MAX_SNAPSHOT_DEPTH) continue
+
+            val selfKey = stableKey(current.node)
+            val sentenceKey = if (isSentenceContainer(current.node)) {
+                "sentence:${sentenceCounter++}"
+            } else {
+                current.sentenceKey
+            }
 
             val text = current.node.text?.toString()?.trim().orEmpty()
             if (text.isNotEmpty() && current.node.isVisibleToUser) {
                 current.node.getBoundsInScreen(bounds)
                 if (!bounds.isEmpty) {
-                    nodes.add(
-                        TextNode(
+                    raw.add(
+                        SentenceGrouper.RawNode(
                             id = "${bounds.left},${bounds.top},${bounds.right},${bounds.bottom}:$text:$index",
                             text = text,
                             bounds = Bounds(bounds.left, bounds.top, bounds.right, bounds.bottom),
-                            packageName = current.node.packageName?.toString().orEmpty()
+                            packageName = current.node.packageName?.toString().orEmpty(),
+                            sentenceKey = sentenceKey,
+                            parentKey = current.parentKey ?: "root"
                         )
                     )
                     index++
@@ -161,10 +173,26 @@ class ScreenTextReaderService : AccessibilityService() {
             if (current.depth == MAX_SNAPSHOT_DEPTH) continue
             for (i in 0 until current.node.childCount) {
                 val child = current.node.getChild(i) ?: continue
-                queue.add(NodeDepth(child, current.depth + 1))
+                queue.add(NodeDepth(child, current.depth + 1, parentKey = selfKey, sentenceKey = sentenceKey))
             }
         }
-        return nodes
+        return SentenceGrouper.assign(raw)
+    }
+
+    /**
+     * Stable identifier for a node's group context: its viewIdResourceName
+     * (falling back to the class name), so sibling grouping does not rely on
+     * the unstable identity hash of AccessibilityNodeInfo instances.
+     */
+    private fun stableKey(node: AccessibilityNodeInfo): String =
+        node.viewIdResourceName?.substringAfterLast('/')?.takeIf { it.isNotBlank() }
+            ?: node.className?.toString()?.substringAfterLast('.')?.takeIf { it.isNotBlank() }
+            ?: "node"
+
+    /** True when the node is a sentence container (e.g. com.hellochinese:id/sentence). */
+    private fun isSentenceContainer(node: AccessibilityNodeInfo): Boolean {
+        val simple = node.viewIdResourceName?.substringAfterLast('/') ?: return false
+        return simple.equals("sentence", ignoreCase = true)
     }
 
     /**
@@ -208,7 +236,12 @@ class ScreenTextReaderService : AccessibilityService() {
         return false
     }
 
-    private data class NodeDepth(val node: AccessibilityNodeInfo, val depth: Int)
+    private data class NodeDepth(
+        val node: AccessibilityNodeInfo,
+        val depth: Int,
+        val parentKey: String? = null,
+        val sentenceKey: String? = null
+    )
 
     companion object {
         const val TAG = "ScreenTextReader"

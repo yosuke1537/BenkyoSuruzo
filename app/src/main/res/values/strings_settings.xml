@@ -25,6 +25,10 @@
     <string name="pref_mask_enabled_summary">語学アプリの文字列を緑色の帯で隠せます（通知から開始）</string>
     <string name="pref_mask_floating_button_title">フローティングボタンを表示する</string>
     <string name="pref_mask_floating_button_summary">画面上のボタンをワンタップするだけでマスクモードを開始できます。ボタンはドラッグで移動できます。</string>
+    <string name="pref_mask_apply_unit_title">マスクする単位</string>
+    <string name="pref_mask_apply_unit_summary">単語をタップしたときに隠す範囲を選択します</string>
+    <string name="pref_mask_clear_unit_title">解除する単位</string>
+    <string name="pref_mask_clear_unit_summary">マスクされた帯をタップしたときに戻す範囲を選択します</string>
     <string name="mask_notification_permission_denied">通知が許可されていないため、開始導線が使えません。設定から通知を許可してください。</string>
 
     <string-array name="capture_mode_entries">
@@ -47,5 +51,14 @@
         <item>ja</item>
         <item>ko</item>
         <item>en</item>
+    </string-array>
+
+    <string-array name="mask_unit_entries">
+        <item>単語ごと</item>
+        <item>文章ごと</item>
+    </string-array>
+    <string-array name="mask_unit_values">
+        <item>word</item>
+        <item>sentence</item>
     </string-array>
 </resources>

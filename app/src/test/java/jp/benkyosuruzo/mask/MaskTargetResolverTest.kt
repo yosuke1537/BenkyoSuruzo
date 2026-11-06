@@ -7,7 +7,7 @@ import org.junit.Test
 class MaskTargetResolverTest {
 
     private fun node(id: String, l: Int, t: Int, r: Int, b: Int) =
-        TextNode(id, "text-$id", Bounds(l, t, r, b), "com.example.app")
+        TextNode(id, "text-$id", Bounds(l, t, r, b), "com.example.app", id)
 
     @Test
     fun returnsCorrectNodeForNonOverlappingNodes() {
