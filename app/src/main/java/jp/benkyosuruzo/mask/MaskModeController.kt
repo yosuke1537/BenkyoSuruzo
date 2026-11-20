@@ -21,8 +21,8 @@ class MaskModeController private constructor() {
         private set
 
     @Synchronized
-    fun start(textNodes: List<TextNode>, originPackage: String) {
-        resolver = MaskTargetResolver(textNodes)
+    fun start(textNodes: List<TextNode>, originPackage: String, resolver: MaskTargetResolver? = null) {
+        this.resolver = resolver ?: MaskTargetResolver(textNodes)
         masks.clear()
         this.originPackage = originPackage
         active = true

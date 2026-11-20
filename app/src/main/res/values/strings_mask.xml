@@ -9,5 +9,6 @@
     <string name="mask_no_targets">この画面には読み取れる文字列がありません</string>
     <string name="mask_need_accessibility">アクセシビリティサービスが無効です</string>
     <string name="mask_overlay_stop_button">終了</string>
-    <string name="mask_floating_button_label">隠</string>
+    <string name="mask_stop_button_label">显</string>
+    <string name="mask_floating_button_label">遮</string>
 </resources>

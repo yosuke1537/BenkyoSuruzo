@@ -6,8 +6,8 @@
     <string name="pref_ocr_enabled_title">OCR を有効にする</string>
     <string name="pref_ocr_enabled_summary">画像化されたテキストを読み取ります</string>
     <string name="pref_capture_mode_title">キャプチャモード</string>
-    <string name="pref_allowed_apps_title">OCR 対象アプリ</string>
-    <string name="pref_allowed_apps_summary">選択したアプリでのみ OCR を実行します</string>
+    <string name="pref_allowed_apps_title">勉強するぞ対象アプリ</string>
+    <string name="pref_allowed_apps_summary">このアプリが前面にあるとき、フロートボタンが表示され、OCR の対象になります</string>
     <string name="pref_allowed_apps_summary_count">選択中：%1$d アプリ</string>
     <string name="pref_threshold_title">採用スコアの閾値</string>
     <string name="pref_threshold_summary">現在：%1$d</string>
@@ -29,6 +29,8 @@
     <string name="pref_mask_apply_unit_summary">単語をタップしたときに隠す範囲を選択します</string>
     <string name="pref_mask_clear_unit_title">解除する単位</string>
     <string name="pref_mask_clear_unit_summary">マスクされた帯をタップしたときに戻す範囲を選択します</string>
+    <string name="pref_mask_excluded_languages_title">マスク対象外の言語</string>
+    <string name="pref_mask_excluded_languages_summary">選択した言語の文字列はマスクされません（例：中国人が英語を学ぶ場合、中国語と日本語を除外）</string>
     <string name="mask_notification_permission_denied">通知が許可されていないため、開始導線が使えません。設定から通知を許可してください。</string>
 
     <string-array name="capture_mode_entries">

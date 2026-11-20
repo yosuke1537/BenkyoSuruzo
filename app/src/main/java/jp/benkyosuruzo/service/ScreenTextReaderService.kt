@@ -34,7 +34,7 @@ class ScreenTextReaderService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         instance = this
-        FloatingButtonController.show(this)
+        FloatingButtonController.syncVisibility(this, rootInActiveWindow?.packageName?.toString().orEmpty())
         handler = ScreenTextHandler.create(this)
     }
 
@@ -44,6 +44,14 @@ class ScreenTextReaderService : AccessibilityService() {
             handleEvent(event)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to handle accessibility event", e)
+        }
+
+        // Sync the floating button with the foreground app (TASK-13).
+        if (event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            val pkg = event.packageName?.toString()
+            if (!pkg.isNullOrBlank() && pkg != packageName) {
+                FloatingButtonController.syncVisibility(this, pkg)
+            }
         }
     }
 
@@ -61,12 +69,16 @@ class ScreenTextReaderService : AccessibilityService() {
         super.onDestroy()
     }
 
-    /** Shows or hides the floating mask button based on its setting. */
+    /** Reconciles the floating mask button with its setting and foreground app. */
     fun syncFloatingButton() {
         val enabled = getSharedPreferences(SettingsKeys.PREFS_NAME, Context.MODE_PRIVATE)
             .getBoolean(SettingsKeys.MASK_FLOATING_BUTTON_ENABLED, false)
-        if (enabled) FloatingButtonController.show(this)
-        else FloatingButtonController.hide()
+        if (!enabled) {
+            FloatingButtonController.hide()
+            return
+        }
+        val pkg = rootInActiveWindow?.packageName?.toString().orEmpty()
+        FloatingButtonController.syncVisibility(this, pkg)
     }
 
     private fun handleEvent(event: AccessibilityEvent?) {

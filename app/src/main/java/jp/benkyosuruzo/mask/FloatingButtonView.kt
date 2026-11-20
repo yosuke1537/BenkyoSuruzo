@@ -13,6 +13,11 @@ import jp.benkyosuruzo.R
  */
 class FloatingButtonView(context: Context) : View(context) {
 
+    init {
+        // Slightly translucent so the content underneath stays visible (TASK-13).
+        alpha = 0.8f
+    }
+
     private val bgPaint = Paint().apply {
         color = 0xFF2E7D32.toInt()
         isAntiAlias = true

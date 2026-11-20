@@ -12,6 +12,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import jp.benkyosuruzo.R
 import jp.benkyosuruzo.service.ScreenTextReaderService
+import jp.benkyosuruzo.settings.SettingsKeys
 
 /**
  * Foreground service that owns the full-screen mask overlay. The overlay is a
@@ -55,6 +56,7 @@ class MaskOverlayService : Service() {
 
     private fun startOverlayWhenReady() {
         if (destroyed) return
+        // Hide the "隠" button; the overlay's "終了" button takes over.
         FloatingButtonController.hide()
         val service = ScreenTextReaderService.current()
         if (service == null) {
@@ -75,7 +77,10 @@ class MaskOverlayService : Service() {
         }
         val accessNodes = service.snapshotTextNodes()
         val pkg = accessNodes.firstOrNull()?.packageName?.takeIf { it.isNotBlank() } ?: activePkg
-        MaskModeController.get().start(accessNodes, pkg)
+        val prefs = getSharedPreferences(SettingsKeys.PREFS_NAME, MODE_PRIVATE)
+        val excluded = prefs.getStringSet(SettingsKeys.MASK_EXCLUDED_LANGUAGES, emptySet()) ?: emptySet()
+        val resolver = MaskTargetResolver(accessNodes, excluded)
+        MaskModeController.get().start(accessNodes, pkg, resolver)
         Log.d(TAG, "start mode, nodes=${accessNodes.size} pkg=$pkg")
         addOverlayView()
         MaskNotificationHelper.sync(this, running = true)
@@ -124,7 +129,13 @@ class MaskOverlayService : Service() {
         MaskModeController.get().stop()
         Log.d(TAG, "stop mode")
         MaskNotificationHelper.sync(this, running = false)
-        ScreenTextReaderService.current()?.let { FloatingButtonController.show(it) }
+        // Re-show the "隠" button if the target app is still foreground.
+        ScreenTextReaderService.current()?.let { service ->
+            FloatingButtonController.syncVisibility(
+                service,
+                service.rootInActiveWindow?.packageName?.toString().orEmpty()
+            )
+        }
         super.onDestroy()
     }
 

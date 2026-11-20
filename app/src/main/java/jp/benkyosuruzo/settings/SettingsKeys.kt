@@ -29,5 +29,8 @@ object SettingsKeys {
     const val MASK_FLOATING_BUTTON_X = "mask_floating_button_x"             // Int
     const val MASK_FLOATING_BUTTON_Y = "mask_floating_button_y"             // Int
 
+    // Mask excluded languages (TASK-13)
+    const val MASK_EXCLUDED_LANGUAGES = "mask_excluded_languages"           // StringSet, default empty
+
     const val PREFS_NAME = "benkyo_settings"
 }

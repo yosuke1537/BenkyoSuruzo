@@ -3,6 +3,7 @@ package jp.benkyosuruzo.mask
 import android.accessibilityservice.AccessibilityService
 import android.content.Context
 import android.graphics.PixelFormat
+import android.graphics.Point
 import android.os.Build
 import android.util.Log
 import android.view.Gravity
@@ -22,9 +23,15 @@ object FloatingButtonController {
 
     private const val TAG = "FloatingButton"
 
+    private const val BUTTON_SIZE_DP = 56f
+    private const val DEFAULT_BUTTON_Y = 200
+
     private var windowManager: WindowManager? = null
     private var buttonView: View? = null
     private var layoutParams: WindowManager.LayoutParams? = null
+
+    @Volatile
+    private var currentForeground: String? = null
 
     fun show(service: AccessibilityService) {
         if (buttonView != null) return
@@ -32,7 +39,7 @@ object FloatingButtonController {
         if (!prefs.getBoolean(SettingsKeys.MASK_FLOATING_BUTTON_ENABLED, false)) return
 
         val wm = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val size = (56 * service.resources.displayMetrics.density).toInt()
+        val size = (BUTTON_SIZE_DP * service.resources.displayMetrics.density).toInt()
         val x = prefs.getInt(SettingsKeys.MASK_FLOATING_BUTTON_X, -1)
         val y = prefs.getInt(SettingsKeys.MASK_FLOATING_BUTTON_Y, -1)
 
@@ -46,7 +53,7 @@ object FloatingButtonController {
         ).apply {
             gravity = Gravity.TOP or Gravity.START
             this.x = if (x >= 0) x else defaultX(wm, size)
-            this.y = if (y >= 0) y else 200
+            this.y = if (y >= 0) y else DEFAULT_BUTTON_Y
         }
 
         val view = FloatingButtonView(service)
@@ -65,9 +72,49 @@ object FloatingButtonController {
         buttonView?.let { runCatching { windowManager?.removeView(it) } }
         buttonView = null
         layoutParams = null
+        currentForeground = null
     }
 
     fun isShowing(): Boolean = buttonView != null
+
+    /**
+     * Screen-space center of the floating button, honoring the remembered drag
+     * position (or the default position when it has never been moved). Used by
+     * the mask overlay so its "終" button appears at the same spot as "隠".
+     */
+    fun buttonCenter(context: Context): Point {
+        val prefs = context.getSharedPreferences(SettingsKeys.PREFS_NAME, Context.MODE_PRIVATE)
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val size = (BUTTON_SIZE_DP * context.resources.displayMetrics.density).toInt()
+        val x = prefs.getInt(SettingsKeys.MASK_FLOATING_BUTTON_X, -1)
+        val y = prefs.getInt(SettingsKeys.MASK_FLOATING_BUTTON_Y, -1)
+        val left = if (x >= 0) x else defaultX(wm, size)
+        val top = if (y >= 0) y else DEFAULT_BUTTON_Y
+        return Point(left + size / 2, top + size / 2)
+    }
+
+    /**
+     * Reconciles button visibility with the current foreground app and the
+     * "勉強するぞ対象アプリ" (formerly OCR target apps) allow list.
+     */
+    fun syncVisibility(service: AccessibilityService, foregroundPackage: String) {
+        if (currentForeground == foregroundPackage) return
+        currentForeground = foregroundPackage
+
+        val prefs = service.getSharedPreferences(SettingsKeys.PREFS_NAME, Context.MODE_PRIVATE)
+        val enabled = prefs.getBoolean(SettingsKeys.MASK_FLOATING_BUTTON_ENABLED, false)
+        // "隠" is hidden while mask mode is active (the overlay's "終了" is shown instead).
+        if (!enabled || MaskModeController.get().active) {
+            hide()
+            return
+        }
+        val targets = prefs.getStringSet(SettingsKeys.ALLOWED_PACKAGES, emptySet()) ?: emptySet()
+        if (foregroundPackage in targets) {
+            show(service)
+        } else {
+            hide()
+        }
+    }
 
     private fun defaultX(wm: WindowManager, size: Int): Int =
         screenWidth(wm) - size - 32

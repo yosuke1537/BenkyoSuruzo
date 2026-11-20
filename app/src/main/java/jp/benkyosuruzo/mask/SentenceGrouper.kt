@@ -24,7 +24,11 @@ object SentenceGrouper {
         val parentKey: String       // stable key of the immediate parent
     )
 
-    private val SENTENCE_END_PUNCTUATION = setOf('。', '！', '？', '.', '!', '?')
+    private val sentenceTerminators = setOf(
+        '。', '！', '？',   // Japanese
+        '.', '!', '?',     // English
+        '；', ';'          // Semicolons (optional)
+    )
 
     fun assign(nodes: List<RawNode>): List<TextNode> {
         val fallbackIds = fallbackGroupIds(nodes.filter { it.sentenceKey == null })
@@ -57,7 +61,9 @@ object SentenceGrouper {
     private fun isSameSentenceGroup(prev: RawNode, next: RawNode): Boolean {
         val gap = next.bounds.top - prev.bounds.bottom
         if (gap > prev.bounds.height() * 1.5) return false
-        val last = prev.text.lastOrNull()
-        return last == null || last !in SENTENCE_END_PUNCTUATION
+        return !endsWithTerminator(prev.text)
     }
+
+    private fun endsWithTerminator(text: String): Boolean =
+        text.trimEnd().lastOrNull() in sentenceTerminators
 }
