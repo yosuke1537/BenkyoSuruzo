@@ -33,7 +33,7 @@ class FloatingButtonView(context: Context) : View(context) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val r = minOf(width, height) / 2f
-        canvas.drawCircle(width / 2f, height / 2f, r * 0.9f, bgPaint)
+        canvas.drawCircle(width / 2f, height / 2f, r, bgPaint)
         canvas.drawText(label, width / 2f, height / 2f + 12f, textPaint)
     }
 }

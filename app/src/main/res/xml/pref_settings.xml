@@ -6,14 +6,16 @@
             app:key="ocr_enabled"
             app:title="@string/pref_ocr_enabled_title"
             app:summary="@string/pref_ocr_enabled_summary"
-            app:defaultValue="false" />
+            app:defaultValue="false"
+            app:enabled="false" />
 
         <ListPreference
             app:key="capture_mode"
             app:title="@string/pref_capture_mode_title"
             app:entries="@array/capture_mode_entries"
             app:entryValues="@array/capture_mode_values"
-            app:defaultValue="once" />
+            app:defaultValue="once"
+            app:enabled="false" />
 
         <jp.benkyosuruzo.settings.AppAllowListPreference
             app:key="allowed_packages"
@@ -23,23 +25,29 @@
         <jp.benkyosuruzo.settings.ThresholdPreference
             app:key="adoption_threshold"
             app:title="@string/pref_threshold_title"
-            app:summary="@string/pref_threshold_summary" />
+            app:summary="@string/pref_threshold_summary"
+            app:enabled="false" />
 
         <jp.benkyosuruzo.settings.LanguagePreference
             app:key="selected_language"
             app:title="@string/pref_language_title"
-            app:defaultValue="zh-Hans" />
+            app:defaultValue="zh-Hans"
+            app:enabled="false" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/pref_category_speech">
+    <PreferenceCategory
+        app:title="@string/pref_category_speech"
+        app:enabled="false">
         <SwitchPreferenceCompat
             app:key="speech_enabled"
             app:title="@string/pref_speech_enabled_title"
-            app:defaultValue="true" />
+            app:defaultValue="true"
+            app:enabled="false" />
 
         <jp.benkyosuruzo.settings.SpeechRatePreference
             app:key="speech_rate"
-            app:title="@string/pref_speech_rate_title" />
+            app:title="@string/pref_speech_rate_title"
+            app:enabled="false" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/pref_category_mask">

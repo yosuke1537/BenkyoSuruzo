@@ -23,7 +23,11 @@ object FloatingButtonController {
 
     private const val TAG = "FloatingButton"
 
-    private const val BUTTON_SIZE_DP = 56f
+    /**
+     * Visual radius (px) shared by the floating "遮" button and the overlay
+     * "显" button so they always render at the same size.
+     */
+    const val BUTTON_RADIUS_PX = 56f
     private const val DEFAULT_BUTTON_Y = 200
 
     private var windowManager: WindowManager? = null
@@ -39,7 +43,7 @@ object FloatingButtonController {
         if (!prefs.getBoolean(SettingsKeys.MASK_FLOATING_BUTTON_ENABLED, false)) return
 
         val wm = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val size = (BUTTON_SIZE_DP * service.resources.displayMetrics.density).toInt()
+        val size = (2 * BUTTON_RADIUS_PX).toInt()
         val x = prefs.getInt(SettingsKeys.MASK_FLOATING_BUTTON_X, -1)
         val y = prefs.getInt(SettingsKeys.MASK_FLOATING_BUTTON_Y, -1)
 
@@ -80,12 +84,12 @@ object FloatingButtonController {
     /**
      * Screen-space center of the floating button, honoring the remembered drag
      * position (or the default position when it has never been moved). Used by
-     * the mask overlay so its "終" button appears at the same spot as "隠".
+     * the mask overlay so its "显" button appears at the same spot as "遮".
      */
     fun buttonCenter(context: Context): Point {
         val prefs = context.getSharedPreferences(SettingsKeys.PREFS_NAME, Context.MODE_PRIVATE)
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val size = (BUTTON_SIZE_DP * context.resources.displayMetrics.density).toInt()
+        val size = (2 * BUTTON_RADIUS_PX).toInt()
         val x = prefs.getInt(SettingsKeys.MASK_FLOATING_BUTTON_X, -1)
         val y = prefs.getInt(SettingsKeys.MASK_FLOATING_BUTTON_Y, -1)
         val left = if (x >= 0) x else defaultX(wm, size)

@@ -59,7 +59,7 @@ class MaskOverlayView(
             )
         }
         val c = stopButtonCenter()
-        canvas.drawCircle(c.x, c.y, STOP_BUTTON_RADIUS, stopBgPaint)
+        canvas.drawCircle(c.x, c.y, FloatingButtonController.BUTTON_RADIUS_PX, stopBgPaint)
         canvas.drawText(context.getString(R.string.mask_stop_button_label), c.x, c.y + 14f, stopTextPaint)
     }
 
@@ -68,7 +68,7 @@ class MaskOverlayView(
             val c = stopButtonCenter()
             val dx = event.x - c.x
             val dy = event.y - c.y
-            if (dx * dx + dy * dy <= STOP_BUTTON_RADIUS * STOP_BUTTON_RADIUS) {
+            if (dx * dx + dy * dy <= FloatingButtonController.BUTTON_RADIUS_PX * FloatingButtonController.BUTTON_RADIUS_PX) {
                 onStop()
                 return true
             }
@@ -96,7 +96,7 @@ class MaskOverlayView(
     }
 
     private fun stopButtonCenter(): PointF {
-        // Place the "終" button exactly where the "隠" floating button is.
+        // Place the "显" button exactly where the "遮" floating button is.
         val screen = FloatingButtonController.buttonCenter(context)
         // Convert screen coordinates to view coordinates (POC-01 found a ~81px offset).
         getLocationOnScreen(offset)
@@ -107,8 +107,7 @@ class MaskOverlayView(
     }
 
     companion object {
-        private const val STOP_BUTTON_RADIUS = 56f
-        // 0.8f * 255, matching the "隠" floating button's view alpha.
+        // 0.8f * 255, matching the "遮" floating button's view alpha.
         private const val STOP_BUTTON_ALPHA = 204
     }
 }
